@@ -16,9 +16,8 @@ namespace AdessoCase.Repository.Repositories
             IQueryable<Travel> travels = _context.Travel.AsNoTracking().Include(x => x.Departure).Include(x => x.Arrival);
             travels = travels.Where(x => x.Departure.Name.ToLower().Contains(departure.ToLower()));
             travels = travels.Where(x => x.Arrival.Name.ToLower().Contains(arrival.ToLower()));
-            travels = travels.Where(x => x.Status == (int)TravelStatus.Active);
-            return travels.ToList();
-
+            travels = travels.Where(x => x.Status == (int)TravelStatus.Active && x.TravelDate > DateTime.UtcNow);
+            return await travels.ToListAsync();
         }
     }
 }

@@ -55,7 +55,8 @@ namespace AdessoCase.API.Controllers
         public async Task<IActionResult> SearchTravels([FromBody] TravelFilterDto travelFilterDto)
         {
             var result = await _travelService.FilterTravelAsync(travelFilterDto);
-            return CreateActionResult(CustomResponseDto<List<Travel>>.Success(201, result));
+           
+            return CreateActionResult(CustomResponseDto<List<FilteredTravelListDto>>.Success(201, result));
         }
 
     }

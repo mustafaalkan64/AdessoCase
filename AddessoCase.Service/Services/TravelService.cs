@@ -37,10 +37,21 @@ namespace AdessoCase.Service.Services
             return CustomResponseDto<NoContentDto>.Success(200);
         }
 
-        public async Task<List<Travel>> FilterTravelAsync(TravelFilterDto filterDto)
+        public async Task<List<FilteredTravelListDto>> FilterTravelAsync(TravelFilterDto filterDto)
         {
             var result = await _travelRepository.GetTravelsByDepartureAndArrivalAsync(filterDto.Departure, filterDto.Arrival);
-            return result;
+            var dtoList = result.Select(x => new FilteredTravelListDto()
+            {
+                Arrival = x.Arrival.Name,
+                Departure = x.Departure.Name,
+                Id = x.Id,
+                Description = x.Description,
+                SeatCount = x.SeatCount,
+                Status = ((TravelStatus)x.Status).ToString(),
+                TravelDate = x.TravelDate
+            }).ToList();
+
+            return dtoList;
         }
     }
 }

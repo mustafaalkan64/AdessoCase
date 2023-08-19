@@ -13,8 +13,7 @@ namespace AdessoCase.Repository.Repositories
 
         public async Task<Travel?> GetTravelById(int travelId)
         {
-
-            return await _context.Travel.FirstOrDefaultAsync(x => x.Id == travelId && x.Status == (int)TravelStatus.Active);
+            return await _context.Travel.FirstOrDefaultAsync(x => x.Id == travelId && x.Status == (int)TravelStatus.Active && x.TravelDate > DateTime.UtcNow);
         }
     }
 }

@@ -3,16 +3,14 @@ using System.Text.Json.Serialization;
 
 namespace AdessoCase.Core.DTOs
 {
-    public class FilteredTravelDto
+    public class FilteredTravelListDto
     {
         public int Id { get; set; }
         public DateTime TravelDate { get; set; }
-        public int Status { get; set; }
+        public string Status { get; set; }
         public string Description { get; set; }
         public int SeatCount { get; set; }
-        public CityDto Departure { get; set; }
-        public CityDto Arrival { get; set; }
-        public int DepartureCityId { get; set; }
-        public int ArrivalCityId { get; set; }
+        public string Departure { get; set; }
+        public string Arrival { get; set; }
     }
 }
