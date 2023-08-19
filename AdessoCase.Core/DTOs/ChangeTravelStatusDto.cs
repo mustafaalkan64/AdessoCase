@@ -1,4 +1,5 @@
 ﻿using AdessoCase.Core.Enums;
+using System.Text.Json.Serialization;
 
 namespace AdessoCase.Core.DTOs
 {
@@ -6,5 +7,7 @@ namespace AdessoCase.Core.DTOs
     {
         public int TravelId { get; set; }
         public TravelStatus TravelStatus { get; set; }
+        [JsonIgnore]
+        public int UserId { get; set; }
     }
 }

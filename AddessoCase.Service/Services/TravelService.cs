@@ -25,13 +25,13 @@ namespace AdessoCase.Service.Services
             _unitOfWork = unitOfWork;   
         }
 
-        public async Task ActiveOrPassiveTravelAsync(int travelId, TravelStatus status)
+        public async Task ActiveOrPassiveTravelAsync(ChangeTravelStatusDto changeTravelStatusDto)
         {
-            var travel = await _travelRepository.GetByIdAsync(travelId);
-            if(travel == null)
-                throw new NotFoundExcepiton($"{typeof(Travel).Name}({travelId}) not found");
+            var travel = await _travelRepository.GetByIdAsync(changeTravelStatusDto.TravelId);
+            if(travel == null || travel.UserId != changeTravelStatusDto.UserId)
+                throw new NotFoundExcepiton($"{typeof(Travel).Name} With ({changeTravelStatusDto.TravelId}) Id, not found");
             
-            travel.Status = (int)status;
+            travel.Status = (int)changeTravelStatusDto.TravelStatus;
             _travelRepository.Update(travel);
             await _unitOfWork.CommitAsync();
         }

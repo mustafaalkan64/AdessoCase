@@ -34,9 +34,11 @@ namespace AdessoCase.API.Controllers
         }
 
         [HttpPut("change-travel-status")]
-        public async Task<IActionResult> Update([FromBody] ChangeTravelStatusDto changeTravelStatusDto)
+        public async Task<IActionResult> Update([FromBody, Required] ChangeTravelStatusDto changeTravelStatusDto)
         {
-            await _travelService.ActiveOrPassiveTravelAsync(changeTravelStatusDto.TravelId, changeTravelStatusDto.TravelStatus);
+            var userId = 1; // Current User Id;
+            changeTravelStatusDto.UserId = userId;
+            await _travelService.ActiveOrPassiveTravelAsync(changeTravelStatusDto);
 
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(204));
         }
