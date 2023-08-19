@@ -25,7 +25,7 @@ namespace AdessoCase.Service.Services
             _unitOfWork = unitOfWork;   
         }
 
-        public async Task<CustomResponseDto<NoContentDto>> ActiveOrPassiveTravelAsync(int travelId, TravelStatus status)
+        public async Task ActiveOrPassiveTravelAsync(int travelId, TravelStatus status)
         {
             var travel = await _travelRepository.GetByIdAsync(travelId);
             if(travel == null)
@@ -34,7 +34,6 @@ namespace AdessoCase.Service.Services
             travel.Status = (int)status;
             _travelRepository.Update(travel);
             await _unitOfWork.CommitAsync();
-            return CustomResponseDto<NoContentDto>.Success(200);
         }
 
         public async Task<List<FilteredTravelListDto>> FilterTravelAsync(TravelFilterDto filterDto)

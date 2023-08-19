@@ -33,7 +33,7 @@ namespace AdessoCase.Service.Services
             await _travelRequestsRepository.AddAsync(travelRequest);
             travel.SeatCount = travel.SeatCount - 1;
             await _unitOfWork.CommitAsync();
-            return CustomResponseDto<NoContentDto>.Success(200);
+            return CustomResponseDto<NoContentDto>.Success(201);
         }
     }
 }
