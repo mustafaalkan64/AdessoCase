@@ -39,7 +39,7 @@ namespace AdessoCase.Service.Services
 
         public async Task<List<FilteredTravelListDto>> FilterTravelAsync(TravelFilterDto filterDto)
         {
-            var result = await _travelRepository.GetTravelsByDepartureAndArrivalAsync(filterDto.Departure, filterDto.Arrival);
+            var result = await _travelRepository.GetTravelsByDepartureAndArrivalAsync(filterDto.From, filterDto.To);
             var dtoList = result.Select(x => new FilteredTravelListDto()
             {
                 Arrival = x.Arrival.Name,

@@ -11,11 +11,15 @@ namespace AdessoCase.Repository.Repositories
         {
         }
 
-        public async Task<List<Travel>> GetTravelsByDepartureAndArrivalAsync(string departure, string arrival)
+        public async Task<List<Travel>> GetTravelsByDepartureAndArrivalAsync(string from, string to)
         {
             IQueryable<Travel> travels = _context.Travel.AsNoTracking().Include(x => x.Departure).Include(x => x.Arrival);
-            travels = travels.Where(x => x.Departure.Name.ToLower().Contains(departure.ToLower()));
-            travels = travels.Where(x => x.Arrival.Name.ToLower().Contains(arrival.ToLower()));
+            if(!String.IsNullOrEmpty(from))
+                travels = travels.Where(x => x.Departure.Name.ToLower().Contains(from.ToLower()));
+            
+            if (!String.IsNullOrEmpty(to))
+                travels = travels.Where(x => x.Departure.Name.ToLower().Contains(to.ToLower()));
+
             travels = travels.Where(x => x.Status == (int)TravelStatus.Active && x.TravelDate > DateTime.UtcNow);
             return await travels.ToListAsync();
         }

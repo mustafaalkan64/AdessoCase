@@ -13,8 +13,8 @@ namespace AddessoCase.Service.Validations
         public TravelFilterDtoValidator()
         {
 
-            RuleFor(x => x.Departure).NotNull().WithMessage("{PropertyName} is required").NotEmpty().WithMessage("{PropertyName} is required");
-            RuleFor(x => x.Arrival).NotNull().WithMessage("{PropertyName} is required").NotEmpty().WithMessage("{PropertyName} is required");
+            RuleFor(x => x.From).NotNull().WithMessage("{PropertyName} is required");
+            RuleFor(x => x.To).NotNull().WithMessage("{PropertyName} is required");
         }
 
 

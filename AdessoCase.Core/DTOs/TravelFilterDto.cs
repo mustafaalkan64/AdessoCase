@@ -8,7 +8,7 @@ namespace AdessoCase.Core.DTOs
 {
     public class TravelFilterDto
     {
-        public string Departure { get; set; }
-        public string Arrival { get; set; }
+        public string From { get; set; }
+        public string To { get; set; }
     }
 }
