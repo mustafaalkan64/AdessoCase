@@ -1,6 +1,7 @@
 using AddessoCase.Service.Validations;
 using AdessoCase.API.Filters;
 using AdessoCase.API.Middlewares;
+using AdessoCase.API.Modules;
 using AdessoCase.Core.Repositories;
 using AdessoCase.Core.Services;
 using AdessoCase.Core.UnitOfWorks;
@@ -10,10 +11,13 @@ using AdessoCase.Repository.UnitOfWorks;
 using AdessoCase.Service.Mapping;
 using AdessoCase.Service.Services;
 using AdessoCase.Service.Validations;
+using Autofac.Extensions.DependencyInjection;
+using Autofac;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using NetCore.AutoRegisterDi;
 using System.Reflection;
 using System.Text.Json.Serialization;
 
@@ -63,18 +67,13 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 
 });
 
-builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-builder.Services.AddScoped(typeof(IService<>), typeof(Service<>));
-builder.Services.AddTransient<ITravelRepository, TravelRepository>();
-builder.Services.AddTransient<ITravelService, TravelService>();
-builder.Services.AddTransient<ITravelRequestsRepository, TravelRequestRepository>();
-builder.Services.AddTransient<ITravelRequestsService, TravelRequestsService>();
-
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
 builder.Services
 .AddDbContext<AppDbContext>(
                 options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Host.UseServiceProviderFactory
+    (new AutofacServiceProviderFactory());
+builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder => containerBuilder.RegisterModule(new RepoServiceModule()));
 
 var app = builder.Build();
 

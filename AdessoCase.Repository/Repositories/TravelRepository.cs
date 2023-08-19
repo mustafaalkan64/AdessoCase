@@ -18,9 +18,9 @@ namespace AdessoCase.Repository.Repositories
                 travels = travels.Where(x => x.Departure.Name.ToLower().Contains(from.ToLower()));
             
             if (!String.IsNullOrEmpty(to))
-                travels = travels.Where(x => x.Departure.Name.ToLower().Contains(to.ToLower()));
+                travels = travels.Where(x => x.Arrival.Name.ToLower().Contains(to.ToLower()));
 
-            travels = travels.Where(x => x.Status == (int)TravelStatus.Active && x.TravelDate > DateTime.UtcNow);
+            travels = travels.Where(x => x.Status == (int)TravelStatus.Active && x.TravelDate > DateTime.UtcNow && x.SeatCount > 0);
             return await travels.ToListAsync();
         }
     }
