@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using AdessoCase.Core.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 namespace AdessoCase.Core.DTOs
 {
-    public class FilteredTravelListDto
+    public class TravelListDto
     {
         public int Id { get; set; }
         public DateTime TravelDate { get; set; }
@@ -12,5 +14,16 @@ namespace AdessoCase.Core.DTOs
         public int SeatCount { get; set; }
         public string Departure { get; set; }
         public string Arrival { get; set; }
+
+        public TravelListDto(Travel travel)
+        {
+            Arrival = travel.Arrival.Name;
+            Departure = travel.Departure.Name;
+            Id = travel.Id;
+            Description = travel.Description;
+            SeatCount = travel.SeatCount;
+            Status = ((TravelStatus)travel.Status).ToString();
+            TravelDate = travel.TravelDate;
+        }
     }
 }

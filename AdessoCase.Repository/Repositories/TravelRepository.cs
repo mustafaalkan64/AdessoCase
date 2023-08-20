@@ -23,5 +23,15 @@ namespace AdessoCase.Repository.Repositories
             travels = travels.Where(x => x.Status == (int)TravelStatus.Active && x.TravelDate > DateTime.UtcNow && x.SeatCount > 0);
             return await travels.ToListAsync();
         }
+
+        public async Task<List<Travel>> GetAllWithLocaltions()
+        {
+            return await _context.Travel.AsNoTracking().Include(x => x.Departure).Include(x => x.Arrival).ToListAsync();
+        }
+
+        public async Task<Travel?> GetByIdWithLocaltions(int travelId)
+        {
+            return await _context.Travel.Include(x => x.Departure).Include(x => x.Arrival).FirstOrDefaultAsync(x => x.Id == travelId);
+        }
     }
 }

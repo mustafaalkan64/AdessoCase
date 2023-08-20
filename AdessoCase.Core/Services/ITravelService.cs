@@ -5,7 +5,8 @@ namespace AdessoCase.Core.Services
 {
     public interface ITravelService : IService<Travel>
     {
-        Task<List<FilteredTravelListDto>> FilterTravelAsync(TravelFilterDto filterDto);
+        Task AddTravelAsync(Travel travel);
+        Task<List<TravelListDto>> FilterTravelAsync(TravelFilterDto filterDto);
         Task ActiveOrPassiveTravelAsync(ChangeTravelStatusDto changeTravelStatusDto);
     }
 }

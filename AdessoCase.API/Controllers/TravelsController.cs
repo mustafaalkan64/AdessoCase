@@ -5,11 +5,10 @@ using AdessoCase.Core;
 using AdessoCase.Core.DTOs;
 using AdessoCase.Core.Services;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace AdessoCase.API.Controllers
 {
-
-
     public class TravelsController : CustomBaseController
     {
         private readonly IMapper _mapper;
@@ -29,7 +28,8 @@ namespace AdessoCase.API.Controllers
         {
             var userId = 1;
             travelDto.UserId = userId;
-            var travel = await _travelService.AddAsync(_mapper.Map<Travel>(travelDto));
+            var travel = _mapper.Map<Travel>(travelDto);
+            await _travelService.AddTravelAsync(travel);
             return CreateActionResult(CustomResponseDto<TravelDto>.Success(201, travelDto));
         }
 
@@ -58,7 +58,7 @@ namespace AdessoCase.API.Controllers
         {
             var result = await _travelService.FilterTravelAsync(travelFilterDto);
            
-            return CreateActionResult(CustomResponseDto<List<FilteredTravelListDto>>.Success(200, result));
+            return CreateActionResult(CustomResponseDto<List<TravelListDto>>.Success(200, result));
         }
 
     }
