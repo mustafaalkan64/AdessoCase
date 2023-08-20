@@ -10,7 +10,6 @@ namespace AdessoCase.Service.Mapping
         {
             CreateMap<Travel, TravelDto>().ReverseMap();
             CreateMap<TravelRequests, TravelRequestDto>().ReverseMap();
-            //CreateMap<List<Travel>, List<FilteredTravelDto>>().ReverseMap();
             CreateMap<City, CityDto>().ReverseMap();
         }
     }

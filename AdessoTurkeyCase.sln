@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdessoCase.Core", "AdessoCa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdessoCase.Repository", "AdessoCase.Repository\AdessoCase.Repository.csproj", "{F57DA960-8E1C-4AE2-B93E-58439D5BEE2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddessoCase.Service", "AddessoCase.Service\AddessoCase.Service.csproj", "{26EB38B8-CD88-430B-8380-E9C024233D9F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdessoCase.Service", "AdessoCase.Service\AdessoCase.Service.csproj", "{4FF9738C-A642-4820-8F14-10BD4AD1BBF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{F57DA960-8E1C-4AE2-B93E-58439D5BEE2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F57DA960-8E1C-4AE2-B93E-58439D5BEE2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F57DA960-8E1C-4AE2-B93E-58439D5BEE2E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{26EB38B8-CD88-430B-8380-E9C024233D9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{26EB38B8-CD88-430B-8380-E9C024233D9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{26EB38B8-CD88-430B-8380-E9C024233D9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{26EB38B8-CD88-430B-8380-E9C024233D9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FF9738C-A642-4820-8F14-10BD4AD1BBF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FF9738C-A642-4820-8F14-10BD4AD1BBF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FF9738C-A642-4820-8F14-10BD4AD1BBF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FF9738C-A642-4820-8F14-10BD4AD1BBF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
