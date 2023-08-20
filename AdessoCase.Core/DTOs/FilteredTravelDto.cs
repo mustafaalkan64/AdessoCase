@@ -17,8 +17,8 @@ namespace AdessoCase.Core.DTOs
 
         public TravelListDto(Travel travel)
         {
-            Arrival = travel.Arrival.Name;
-            Departure = travel.Departure.Name;
+            Arrival = travel.Arrival?.Name ?? string.Empty;
+            Departure = travel.Departure?.Name ?? string.Empty;
             Id = travel.Id;
             Description = travel.Description;
             SeatCount = travel.SeatCount;

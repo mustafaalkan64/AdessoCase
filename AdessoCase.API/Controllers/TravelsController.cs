@@ -61,5 +61,13 @@ namespace AdessoCase.API.Controllers
             return CreateActionResult(CustomResponseDto<List<TravelListDto>>.Success(200, result));
         }
 
+        [HttpPost("set-travel-cache")]
+        public async Task<IActionResult> SetTravelCache()
+        {
+            await _travelService.SetTravelCache();
+
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(204));
+        }
+
     }
 }

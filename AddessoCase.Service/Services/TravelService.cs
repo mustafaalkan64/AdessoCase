@@ -52,6 +52,7 @@ namespace AdessoCase.Service.Services
 
         public async Task<List<TravelListDto>> FilterTravelAsync(TravelFilterDto filterDto)
         {
+            // TODO: In order to improve performance, i used memory cache. But it desire, you can implement Elastic Search for search quickly
             if(!_memCache.TryGetValue(CacheTravelKey, out _))
             {
                 var result = await _travelRepository.GetTravelsByDepartureAndArrivalAsync(filterDto.From, filterDto.To);
@@ -63,6 +64,7 @@ namespace AdessoCase.Service.Services
             {
                 var travelList = _memCache.Get<IEnumerable<TravelListDto>>(CacheTravelKey);
                 if (!string.IsNullOrEmpty(filterDto.From))
+                    //travelList = travelList.Where(x => x.Departure.Contains(filterDto.From, StringComparison.OrdinalIgnoreCase)); // Does not work for İzmir!
                     travelList = travelList.Where(x => x.Departure.ToLower().Contains(filterDto.From.ToLower()));
 
                 if (!string.IsNullOrEmpty(filterDto.To))
@@ -89,10 +91,22 @@ namespace AdessoCase.Service.Services
             }
             else
             {
+                // TODO: We have allready travel obj, if we get cities from cache (city data is constant allready), we dont need to get query from sql twice time..
                 var travelList = _memCache.Get<List<TravelListDto>>(CacheTravelKey);
                 var result = await _travelRepository.GetByIdWithLocaltions(travel.Id);
                 travelList.Add(new TravelListDto(result));
                 _memCache.Set(CacheTravelKey, travelList);
+            }
+        }
+
+
+        public async Task SetTravelCache()
+        {
+            if (!_memCache.TryGetValue(CacheTravelKey, out _))
+            {
+
+                var dtoList = (await _travelRepository.GetAllWithLocaltions()).Select(x => new TravelListDto(x)).ToList();
+                _memCache.Set(CacheTravelKey, dtoList);
             }
         }
     }

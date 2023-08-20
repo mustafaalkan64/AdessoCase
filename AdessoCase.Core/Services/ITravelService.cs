@@ -8,5 +8,6 @@ namespace AdessoCase.Core.Services
         Task AddTravelAsync(Travel travel);
         Task<List<TravelListDto>> FilterTravelAsync(TravelFilterDto filterDto);
         Task ActiveOrPassiveTravelAsync(ChangeTravelStatusDto changeTravelStatusDto);
+        Task SetTravelCache();
     }
 }
