@@ -21,19 +21,18 @@ namespace AdessoCase.Service.Services
             _unitOfWork = unitOfWork;   
         }
 
-        public async Task<CustomResponseDto<NoContentDto>> CreateNewTravelRequest(TravelRequests travelRequest)
+        public async Task CreateNewTravelRequest(TravelRequests travelRequest)
         {
             var travel = await _travelRequestsRepository.GetTravelById(travelRequest.TravelId);
             if (travel == null)
                 throw new NotFoundExcepiton($"{typeof(Travel).Name}({travelRequest.TravelId}) not found");
 
             if (travel.SeatCount < 1)
-                return CustomResponseDto<NoContentDto>.Fail(400, "Selected Travel Has No Seat, Please Search Another Travel");
+                throw new ClientSideException("Selected Travel Has No Seat, Please Search Another Travel");
 
             await _travelRequestsRepository.AddAsync(travelRequest);
             travel.SeatCount = travel.SeatCount - 1;
             await _unitOfWork.CommitAsync();
-            return CustomResponseDto<NoContentDto>.Success(201);
         }
     }
 }

@@ -48,9 +48,8 @@ namespace AdessoCase.API.Controllers
         {
             var travelRequest = _mapper.Map<TravelRequests>(travelRequestDto);
             travelRequest.UserId = 2;
-            var result = await _travelRequestsService.CreateNewTravelRequest(travelRequest);
-
-            return CreateActionResult(result);
+            await _travelRequestsService.CreateNewTravelRequest(travelRequest);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
         }
 
         [HttpPost("search-travels")]
