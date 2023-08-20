@@ -62,10 +62,10 @@ namespace AdessoCase.Service.Services
             else
             {
                 var travelList = _memCache.Get<IEnumerable<TravelListDto>>(CacheTravelKey);
-                if (!String.IsNullOrEmpty(filterDto.From))
+                if (!string.IsNullOrEmpty(filterDto.From))
                     travelList = travelList.Where(x => x.Departure.ToLower().Contains(filterDto.From.ToLower()));
 
-                if (!String.IsNullOrEmpty(filterDto.To))
+                if (!string.IsNullOrEmpty(filterDto.To))
                     travelList = travelList.Where(x => x.Arrival.ToLower().Contains(filterDto.To.ToLower()));
 
                 travelList = travelList.Where(x => x.Status == TravelStatus.Active.ToString() && x.TravelDate > DateTime.UtcNow && x.SeatCount > 0);
@@ -76,6 +76,7 @@ namespace AdessoCase.Service.Services
 
         public async Task AddTravelAsync(Travel travel)
         {
+            travel.TravelDate = travel.TravelDate.ToUniversalTime();
             await _travelRepository.AddAsync(travel);
             await _unitOfWork.CommitAsync();
 
