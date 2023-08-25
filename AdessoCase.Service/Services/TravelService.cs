@@ -18,25 +18,28 @@ namespace AdessoCase.Service.Services
     public class TravelService : Service<Travel>, ITravelService
     {
         private const string CacheTravelKey = "TravelsCache";
+        private const string CacheCityKey = "CityCache";
         private readonly ITravelRepository _travelRepository;
+        private readonly IGenericRepository<City> _cityRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMemoryCache _memCache;
 
-        public TravelService(IGenericRepository<Travel> repository, IMemoryCache memCache, IUnitOfWork unitOfWork, IMapper mapper, ITravelRepository travelRepository) : base(repository, unitOfWork)
+        public TravelService(IGenericRepository<Travel> repository, IGenericRepository<City> cityRepository, IMemoryCache memCache, IUnitOfWork unitOfWork, IMapper mapper, ITravelRepository travelRepository) : base(repository, unitOfWork)
         {
             _mapper = mapper;
             _travelRepository = travelRepository;
-            _unitOfWork = unitOfWork;   
+            _unitOfWork = unitOfWork;
             _memCache = memCache;
+            _cityRepository = cityRepository;
         }
 
         public async Task ActiveOrPassiveTravelAsync(ChangeTravelStatusDto changeTravelStatusDto)
         {
             var travel = await _travelRepository.GetByIdAsync(changeTravelStatusDto.TravelId);
-            if(travel == null || travel.UserId != changeTravelStatusDto.UserId)
+            if (travel == null || travel.UserId != changeTravelStatusDto.UserId)
                 throw new NotFoundExcepiton($"{typeof(Travel).Name} With ({changeTravelStatusDto.TravelId}) Id, not found");
-            
+
             travel.Status = (int)changeTravelStatusDto.TravelStatus;
             _travelRepository.Update(travel);
 
@@ -53,7 +56,7 @@ namespace AdessoCase.Service.Services
         public async Task<List<TravelListDto>> FilterTravelAsync(TravelFilterDto filterDto)
         {
             // TODO: In order to improve performance, i used memory cache. But it desire, you can implement Elastic Search for search quickly
-            if(!_memCache.TryGetValue(CacheTravelKey, out _))
+            if (!_memCache.TryGetValue(CacheTravelKey, out _))
             {
                 var result = await _travelRepository.GetTravelsByDepartureAndArrivalAsync(filterDto.From, filterDto.To);
                 var dtoList = result.Select(x => new TravelListDto(x)).ToList();
@@ -85,16 +88,18 @@ namespace AdessoCase.Service.Services
 
             if (!_memCache.TryGetValue(CacheTravelKey, out _))
             {
-
-                var dtoList = (await _travelRepository.GetAllWithLocaltions()).Select(x => new TravelListDto(x)).ToList();
-                _memCache.Set(CacheTravelKey, dtoList);
+                await SetAllCache();
             }
             else
             {
                 // TODO: We have allready travel obj, if we get cities from cache (city data is constant allready), we dont need to get query from sql twice time..
                 var travelList = _memCache.Get<List<TravelListDto>>(CacheTravelKey);
-                var result = await _travelRepository.GetByIdWithLocaltions(travel.Id);
-                travelList.Add(new TravelListDto(result));
+                var cityList = _memCache.Get<IEnumerable<CityDto>>(CacheCityKey);
+                var departureCity = cityList.FirstOrDefault(x => x.Id == travel.DepartureCityId);
+                var arrivalCity = cityList.FirstOrDefault(x => x.Id == travel.ArrivalCityId);
+                travel.Arrival = _mapper.Map<City>(arrivalCity);
+                travel.Departure = _mapper.Map<City>(departureCity);
+                travelList.Add(new TravelListDto(travel));
                 _memCache.Set(CacheTravelKey, travelList);
             }
         }
@@ -102,12 +107,17 @@ namespace AdessoCase.Service.Services
 
         public async Task SetTravelCache()
         {
-            if (!_memCache.TryGetValue(CacheTravelKey, out _))
-            {
+            await SetAllCache();
+        }
 
-                var dtoList = (await _travelRepository.GetAllWithLocaltions()).Select(x => new TravelListDto(x)).ToList();
-                _memCache.Set(CacheTravelKey, dtoList);
-            }
+        private async Task SetAllCache()
+        {
+            var dtoList = (await _travelRepository.GetAllWithLocaltions()).Select(x => new TravelListDto(x)).ToList();
+            _memCache.Set(CacheTravelKey, dtoList);
+
+            var cityList = _cityRepository.GetAll().Select(x => new CityDto() { Id = x.Id, Name = x.Name }).ToList();
+            _memCache.Set(CacheCityKey, cityList);
+
         }
     }
 }
