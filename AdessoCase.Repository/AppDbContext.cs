@@ -11,9 +11,6 @@ namespace AdessoCase.Repository
         {
         }
 
-        //public DbSet<Category> Categories { get; set; }
-        //public DbSet<Product> Products { get; set; }
-        //public DbSet<ProductFeature> ProductFeatures { get; set; }
         public DbSet<City> City { get; set; }
         public DbSet<Travel> Travel { get; set; }
         public DbSet<TravelRequests> TravelRequests { get; set; }

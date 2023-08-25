@@ -97,8 +97,8 @@ namespace AdessoCase.Service.Services
                 var cityList = _memCache.Get<IEnumerable<CityDto>>(CacheCityKey);
                 var departureCity = cityList.FirstOrDefault(x => x.Id == travel.DepartureCityId);
                 var arrivalCity = cityList.FirstOrDefault(x => x.Id == travel.ArrivalCityId);
-                travel.Arrival = _mapper.Map<City>(arrivalCity);
-                travel.Departure = _mapper.Map<City>(departureCity);
+                travel.Arrival = new City() { Id = arrivalCity.Id, Name = arrivalCity.Name };
+                travel.Departure = new City() { Id = departureCity.Id, Name = departureCity.Name };
                 travelList.Add(new TravelListDto(travel));
                 _memCache.Set(CacheTravelKey, travelList);
             }
