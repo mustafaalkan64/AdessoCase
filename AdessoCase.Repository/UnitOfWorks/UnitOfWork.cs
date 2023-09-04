@@ -16,9 +16,9 @@ namespace AdessoCase.Repository.UnitOfWorks
             _context.SaveChanges();
         }
 
-        public async Task CommitAsync()
+        public async Task CommitAsync(CancellationToken token)
         {
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(token);
         }
     }
 }

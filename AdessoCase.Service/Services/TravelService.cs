@@ -12,6 +12,7 @@ using AdessoCase.Service.Exceptions;
 using Microsoft.Extensions.Caching.Memory;
 using AdessoCase.Repository.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
 
 namespace AdessoCase.Service.Services
 {
@@ -34,7 +35,7 @@ namespace AdessoCase.Service.Services
             _cityRepository = cityRepository;
         }
 
-        public async Task ActiveOrPassiveTravelAsync(ChangeTravelStatusDto changeTravelStatusDto)
+        public async Task ActiveOrPassiveTravelAsync(ChangeTravelStatusDto changeTravelStatusDto, CancellationToken cancellationToken)
         {
             var travel = await _travelRepository.GetByIdAsync(changeTravelStatusDto.TravelId);
             if (travel == null || travel.UserId != changeTravelStatusDto.UserId)
@@ -50,7 +51,7 @@ namespace AdessoCase.Service.Services
                 cache.Status = changeTravelStatusDto.TravelStatus.ToString();
                 _memCache.Set(CacheTravelKey, travelList);
             }
-            await _unitOfWork.CommitAsync();
+            await _unitOfWork.CommitAsync(cancellationToken);
         }
 
         public async Task<List<TravelListDto>> FilterTravelAsync(TravelFilterDto filterDto)
@@ -79,11 +80,11 @@ namespace AdessoCase.Service.Services
 
         }
 
-        public async Task AddTravelAsync(Travel travel)
+        public async Task AddTravelAsync(Travel travel, CancellationToken cancellationToken)
         {
             travel.TravelDate = travel.TravelDate.ToUniversalTime();
             await _travelRepository.AddAsync(travel);
-            await _unitOfWork.CommitAsync();
+            await _unitOfWork.CommitAsync(cancellationToken);
 
 
             if (!_memCache.TryGetValue(CacheTravelKey, out _))

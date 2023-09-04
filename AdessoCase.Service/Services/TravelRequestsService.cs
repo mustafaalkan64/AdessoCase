@@ -21,7 +21,7 @@ namespace AdessoCase.Service.Services
             _unitOfWork = unitOfWork;   
         }
 
-        public async Task CreateNewTravelRequest(TravelRequests travelRequest)
+        public async Task CreateNewTravelRequest(TravelRequests travelRequest, CancellationToken cancellationToken)
         {
             var travel = await _travelRequestsRepository.GetTravelById(travelRequest.TravelId);
             if (travel == null)
@@ -32,7 +32,7 @@ namespace AdessoCase.Service.Services
 
             await _travelRequestsRepository.AddAsync(travelRequest);
             travel.SeatCount = travel.SeatCount - 1;
-            await _unitOfWork.CommitAsync();
+            await _unitOfWork.CommitAsync(cancellationToken);
         }
     }
 }

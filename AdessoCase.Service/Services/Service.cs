@@ -19,17 +19,17 @@ namespace AdessoCase.Service.Services
 
 
 
-        public async Task<T> AddAsync(T entity)
+        public async Task<T> AddAsync(T entity, CancellationToken cancellationToken)
         {
             await _repository.AddAsync(entity);
-            await _unitOfWork.CommitAsync();
+            await _unitOfWork.CommitAsync(cancellationToken);
             return entity;
         }
 
-        public async Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities)
+        public async Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken)
         {
             await _repository.AddRangeAsync(entities);
-            await _unitOfWork.CommitAsync();
+            await _unitOfWork.CommitAsync(cancellationToken);
             return entities;
         }
 
@@ -54,22 +54,22 @@ namespace AdessoCase.Service.Services
             return hasProduct;
         }
 
-        public async Task RemoveAsync(T entity)
+        public async Task RemoveAsync(T entity, CancellationToken cancellationToken)
         {
             _repository.Remove(entity);
-            await _unitOfWork.CommitAsync();
+            await _unitOfWork.CommitAsync(cancellationToken);
         }
 
-        public async Task RemoveRangeAsync(IEnumerable<T> entities)
+        public async Task RemoveRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken)
         {
             _repository.RemoveRange(entities);
-            await _unitOfWork.CommitAsync();
+            await _unitOfWork.CommitAsync(cancellationToken);
         }
 
-        public async Task UpdateAsync(T entity)
+        public async Task UpdateAsync(T entity, CancellationToken cancellationToken)
         {
             _repository.Update(entity);
-            await _unitOfWork.CommitAsync();
+            await _unitOfWork.CommitAsync(cancellationToken);
         }
 
         public IQueryable<T> Where(Expression<Func<T, bool>> expression)
