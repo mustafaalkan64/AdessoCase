@@ -116,9 +116,8 @@ namespace AdessoCase.Service.Services
             var dtoList = (await _travelRepository.GetAllWithLocaltions(cancellationToken)).Select(x => new TravelListDto(x)).ToList();
             _memCache.Set(CacheTravelKey, dtoList);
 
-            var cityList = _cityRepository.GetAll().Select(x => new CityDto() { Id = x.Id, Name = x.Name }).ToList();
+            var cityList = await _cityRepository.GetAll().Select(x => new CityDto() { Id = x.Id, Name = x.Name }).ToListAsync(cancellationToken);
             _memCache.Set(CacheCityKey, cityList);
-
         }
     }
 }
