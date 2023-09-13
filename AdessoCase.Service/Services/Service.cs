@@ -21,14 +21,14 @@ namespace AdessoCase.Service.Services
 
         public async Task<T> AddAsync(T entity, CancellationToken cancellationToken)
         {
-            await _repository.AddAsync(entity);
+            await _repository.AddAsync(entity, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
             return entity;
         }
 
         public async Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken)
         {
-            await _repository.AddRangeAsync(entities);
+            await _repository.AddRangeAsync(entities, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
             return entities;
         }
@@ -38,9 +38,9 @@ namespace AdessoCase.Service.Services
             return await _repository.AnyAsync(expression, cancellationToken);
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(CancellationToken token = default)
+        public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            return await _repository.GetAll().ToListAsync(token);
+            return await _repository.GetAll().ToListAsync(cancellationToken);
         }
 
         public async Task<T> GetByIdAsync(int id, CancellationToken cancellationToken = default)
