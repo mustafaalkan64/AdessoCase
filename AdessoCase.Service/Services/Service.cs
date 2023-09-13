@@ -33,19 +33,19 @@ namespace AdessoCase.Service.Services
             return entities;
         }
 
-        public async Task<bool> AnyAsync(Expression<Func<T, bool>> expression)
+        public async Task<bool> AnyAsync(Expression<Func<T, bool>> expression, CancellationToken cancellationToken = default)
         {
-            return await _repository.AnyAsync(expression);
+            return await _repository.AnyAsync(expression, cancellationToken);
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAllAsync(CancellationToken token = default)
         {
-            return await _repository.GetAll().ToListAsync();
+            return await _repository.GetAll().ToListAsync(token);
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            var hasProduct = await _repository.GetByIdAsync(id);
+            var hasProduct = await _repository.GetByIdAsync(id, cancellationToken);
 
             if (hasProduct == null)
             {

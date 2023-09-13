@@ -24,7 +24,7 @@ namespace AdessoCase.API.Controllers
         }
 
         [HttpPost("create-travel")]
-        public async Task<IActionResult> CreateNewTravel([FromBody, Required] TravelDto travelDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateNewTravel([FromBody, Required] TravelDto travelDto, CancellationToken cancellationToken = default)
         {
             var userId = 1;
             travelDto.UserId = userId;
@@ -34,7 +34,7 @@ namespace AdessoCase.API.Controllers
         }
 
         [HttpPut("change-travel-status")]
-        public async Task<IActionResult> Update([FromBody, Required] ChangeTravelStatusDto changeTravelStatusDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update([FromBody, Required] ChangeTravelStatusDto changeTravelStatusDto, CancellationToken cancellationToken = default)
         {
             var userId = 1; // Current User Id;
             changeTravelStatusDto.UserId = userId;
@@ -44,7 +44,7 @@ namespace AdessoCase.API.Controllers
         }
 
         [HttpPost("create-travel-requests")]
-        public async Task<IActionResult> CreateTravelRequest(TravelRequestDto travelRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateTravelRequest(TravelRequestDto travelRequestDto, CancellationToken cancellationToken = default)
         {
             var travelRequest = _mapper.Map<TravelRequests>(travelRequestDto);
             travelRequest.UserId = 2;
@@ -53,9 +53,9 @@ namespace AdessoCase.API.Controllers
         }
 
         [HttpPost("search-travels")]
-        public async Task<IActionResult> SearchTravels([FromBody] TravelFilterDto travelFilterDto)
+        public async Task<IActionResult> SearchTravels([FromBody] TravelFilterDto travelFilterDto, CancellationToken cancellationToken = default)
         {
-            var result = await _travelService.FilterTravelAsync(travelFilterDto);
+            var result = await _travelService.FilterTravelAsync(travelFilterDto, cancellationToken);
            
             return CreateActionResult(CustomResponseDto<List<TravelListDto>>.Success(200, result));
         }

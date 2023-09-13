@@ -2,6 +2,6 @@
 {
     public interface ITravelRequestsRepository : IGenericRepository<TravelRequests>
     {
-        Task<Travel?> GetTravelById(int travelId);
+        Task<Travel?> GetTravelById(int travelId, CancellationToken cancellationToken = default);
     }
 }

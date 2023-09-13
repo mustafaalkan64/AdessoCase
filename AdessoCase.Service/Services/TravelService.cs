@@ -35,9 +35,9 @@ namespace AdessoCase.Service.Services
             _cityRepository = cityRepository;
         }
 
-        public async Task ActiveOrPassiveTravelAsync(ChangeTravelStatusDto changeTravelStatusDto, CancellationToken cancellationToken)
+        public async Task ActiveOrPassiveTravelAsync(ChangeTravelStatusDto changeTravelStatusDto, CancellationToken cancellationToken = default)
         {
-            var travel = await _travelRepository.GetByIdAsync(changeTravelStatusDto.TravelId);
+            var travel = await _travelRepository.GetByIdAsync(changeTravelStatusDto.TravelId, cancellationToken);
             if (travel == null || travel.UserId != changeTravelStatusDto.UserId)
                 throw new NotFoundExcepiton($"{typeof(Travel).Name} With ({changeTravelStatusDto.TravelId}) Id, not found");
 
@@ -54,12 +54,12 @@ namespace AdessoCase.Service.Services
             await _unitOfWork.CommitAsync(cancellationToken);
         }
 
-        public async Task<List<TravelListDto>> FilterTravelAsync(TravelFilterDto filterDto)
+        public async Task<List<TravelListDto>> FilterTravelAsync(TravelFilterDto filterDto, CancellationToken cancellationToken = default)
         {
             // TODO: In order to improve performance, i used memory cache. But it desire, you can implement Elastic Search for search quickly
             if (!_memCache.TryGetValue(CacheTravelKey, out _))
             {
-                var result = await _travelRepository.GetTravelsByDepartureAndArrivalAsync(filterDto.From, filterDto.To);
+                var result = await _travelRepository.GetTravelsByDepartureAndArrivalAsync(filterDto.From, filterDto.To, cancellationToken);
                 var dtoList = result.Select(x => new TravelListDto(x)).ToList();
 
                 return dtoList;
@@ -80,16 +80,16 @@ namespace AdessoCase.Service.Services
 
         }
 
-        public async Task AddTravelAsync(Travel travel, CancellationToken cancellationToken)
+        public async Task AddTravelAsync(Travel travel, CancellationToken cancellationToken = default)
         {
             travel.TravelDate = travel.TravelDate.ToUniversalTime();
-            await _travelRepository.AddAsync(travel);
+            await _travelRepository.AddAsync(travel, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
 
 
             if (!_memCache.TryGetValue(CacheTravelKey, out _))
             {
-                await SetAllCache();
+                await SetAllCache(cancellationToken);
             }
             else
             {
@@ -111,9 +111,9 @@ namespace AdessoCase.Service.Services
             await SetAllCache();
         }
 
-        private async Task SetAllCache()
+        private async Task SetAllCache(CancellationToken cancellationToken = default)
         {
-            var dtoList = (await _travelRepository.GetAllWithLocaltions()).Select(x => new TravelListDto(x)).ToList();
+            var dtoList = (await _travelRepository.GetAllWithLocaltions(cancellationToken)).Select(x => new TravelListDto(x)).ToList();
             _memCache.Set(CacheTravelKey, dtoList);
 
             var cityList = _cityRepository.GetAll().Select(x => new CityDto() { Id = x.Id, Name = x.Name }).ToList();
